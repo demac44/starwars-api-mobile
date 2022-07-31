@@ -1,7 +1,10 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { View, StyleSheet, Text } from 'react-native'
-import Characters from '../Components/Characters/Characters'
+import { View, StyleSheet, Text, TouchableOpacity, ScrollView } from 'react-native'
+import SearchBar from "../Components/SearchBar/SearchBar"
+import Character from "../Components/Characters/Character"
+import FiltersBar from "../Components/Characters/FiltersBar"
+
 
 let movieTitle = ""
 let originalArray = []
@@ -104,12 +107,50 @@ const CharactersScreen = ({ route, navigation }) => {
         <View style={styles.container}>
             {loading 
             ? <Text>Loading</Text> 
-            : <Characters 
-                characters={characters} navigation={navigation}
-                sortResults={sortResults}
-                filterResults={filterResults}
-                />  
-                }          
+            : 
+            <>
+              <ScrollView>
+                  <SearchBar navigation={navigation}/>
+                  <FiltersBar sortResults={sortResults} filterResults={filterResults}/>
+                  <View>
+                    <Text style={{
+                      borderColor: "black", 
+                      borderWidth:1, 
+                      textAlign: "center",
+                      padding: 10,
+                      marginTop:10,
+                      fontSize:20,
+                      backgroundColor: "#1b1b1b",
+                      color: "white"
+                      }}>Movie: { movieTitle }</Text>
+                  </View>
+                  {characters.map(character => <Character character={character} key={character.name}/>)}
+
+                  {fetching && 
+                    <View style={{textAlign:"center", padding:15, alignItems: "center"}}>
+                      <Text style={{fontSize:20}}>Loading...</Text>
+                    </View>
+                    }
+                  
+                  {(showLoadMore && !fetching) &&
+                    <>
+                      <TouchableOpacity style={styles.loadMore} onPress={() => {
+                        setFetching(true)
+                        fetchData(query, limit+30, limit)
+                        .then(res => {
+                          setCharacters([...characters, ...res.characters])
+                          setShowLoadMore(res.showLoadMore)
+                        })
+                        .then(() => setFetching(false))
+                      }}>
+                        <View>
+                          <Text style={{fontSize:18}}>Load more</Text>
+                        </View>
+                      </TouchableOpacity>
+                    </>}
+
+              </ScrollView>
+          </>}
         </View>
       </>
     )
@@ -122,6 +163,13 @@ const styles = StyleSheet.create({
     container:{
         flex: 1,
         padding:5
+    },
+    loadMore:{
+      borderWidth:1,
+      borderColor: "black",
+      padding: 10,
+      alignItems: "center",
+      marginTop:20
     }
 })
 
