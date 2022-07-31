@@ -4,6 +4,7 @@ import { View, StyleSheet, Text, TouchableOpacity, ScrollView } from 'react-nati
 import SearchBar from "../Components/SearchBar/SearchBar"
 import Character from "../Components/Characters/Character"
 import FiltersBar from "../Components/Characters/FiltersBar"
+import Loader from '../Components/Loaders/Loader'
 
 
 let movieTitle = ""
@@ -106,7 +107,7 @@ const CharactersScreen = ({ route, navigation }) => {
       <>
         <View style={styles.container}>
             {loading 
-            ? <Text>Loading</Text> 
+            ? <Loader/> 
             : 
             <>
               <ScrollView>
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
 const fetchData = async (query, limit, offset) => {
     return await axios({
       method: "POST",
-      url: "http://192.168.1.78:5000/api/people",
+      url: "http://localhost:5000/api/people",
     data: {
       query: query,
       limit: limit,

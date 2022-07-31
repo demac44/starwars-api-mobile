@@ -11,7 +11,7 @@ const SearchBar = ({ navigation }) => {
     }
 
     const submitClimates = () => {
-        navigation.navigate("Planets", {query: queryClimates})
+        navigation.navigate("Planets", {climate: queryClimates})
     }
   return (
     <View style={styles.container}>
@@ -25,7 +25,7 @@ const SearchBar = ({ navigation }) => {
 
         <TextInput
         style={styles.textInput}
-        placeholder="Search planets climates..."
+        placeholder="Search planets by climate..."
         onSubmitEditing={submitClimates}
         value={queryClimates}
         onChangeText={text => setQueryClimates(text)}
